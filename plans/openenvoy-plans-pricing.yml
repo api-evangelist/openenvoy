@@ -1,0 +1,56 @@
+generated: '2026-08-26'
+method: searched
+source: https://support.openenvoy.com/ + https://www.openenvoy.com/llms.txt
+docs: https://www.openenvoy.com/pricing
+plan_count: 3
+currency: null
+pricing_published: false
+plans:
+- name: Self-Service
+  price: null
+  currency: null
+  billing_period: null
+  included_quota: null
+  overage: null
+  limits: null
+  source: https://support.openenvoy.com/
+  note: >-
+    Named tier. No price, quota or limit is published. Evidenced by the OpenEnvoy knowledge base,
+    which describes onboarding "whether you're on the Self-Service, Growth, or Enterprise plan".
+- name: Growth
+  price: null
+  currency: null
+  billing_period: null
+  included_quota: null
+  overage: null
+  limits: null
+  source: https://support.openenvoy.com/
+- name: Enterprise
+  price: null
+  currency: null
+  billing_period: null
+  included_quota: null
+  overage: null
+  limits: null
+  source: https://support.openenvoy.com/
+note: >-
+  OpenEnvoy names three plan tiers but publishes no price for any of them. The pricing page at
+  https://www.openenvoy.com/pricing exists and is referenced by OpenEnvoy's own llms.txt, but
+  returned HTTP 403 (Cloudflare bot challenge) to every fetch we attempted, so its contents could
+  not be read; the tier names come from the publicly readable support knowledge base instead. The
+  commercial motion is demo-and-quote — the site's primary calls to action are "Request a Demo" and
+  an ROI calculator rather than a signup. A "Token Billing" changelog entry dated 2026-05-18
+  indicates consumption-based billing exists in the product, but no rate card is public.
+api_pricing:
+  metered: unknown
+  note: >-
+    No API-specific pricing, call quota or per-call charge is published, and API access is not
+    offered as a separate purchasable product. API credentials are issued by customer success to
+    existing customers (authentication/openenvoy-authentication.yml).
+evidence:
+- url: https://support.openenvoy.com/
+  status: 200
+- url: https://www.openenvoy.com/pricing
+  status: 403
+- url: https://www.openenvoy.com/llms.txt
+  status: 200

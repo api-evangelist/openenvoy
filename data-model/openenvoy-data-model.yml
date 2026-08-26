@@ -1,0 +1,144 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/openenvoy-openapi.json (definitions + $ref graph) + postman/openenvoy-postman-collection.json
+summary: >-
+  A job-centric graph. A Job is one invoice under audit. It owns many JobDocuments (the invoice plus
+  its baseline documents — purchase orders, contracts, rate sheets, receipts), each of which owns
+  many JobDocumentVersions. The matching result is attached at the version level as
+  MatchingLineItems, which pair each invoice line against the matched baseline line. Extracted
+  invoice content hangs off the Job as InvoiceInfo.
+identifiers:
+  style: uuid-v4
+  note: >-
+    All entity ids are UUIDs. Job additionally carries a human-facing `job_number` (example
+    "OE0001") which is the identifier every job-scoped path uses — paths are /jobs/{jobNumber},
+    not /jobs/{id}. An agent must not substitute Job.id for jobNumber.
+  prefixes: []
+entities:
+- name: Job
+  description: An invoice under audit, and the root of the graph.
+  primary_key: id (uuid)
+  business_key: job_number
+  fields:
+  - {name: id, type: string, format: uuid}
+  - {name: job_number, type: string, note: human-facing key used in all job-scoped paths}
+  - {name: status, type: string, note: 'e.g. Matching. The full status enumeration is not published.'}
+  - {name: active, type: boolean, note: suggests soft-delete semantics}
+  - {name: amount, type: integer}
+  - {name: matched_amount, type: integer}
+  - {name: matched_amount_status, type: string}
+  - {name: note, type: string}
+  - {name: provider, type: object, note: 'the supplier/vendor; inline object, not a $ref'}
+  - {name: created_at, type: string, format: date-time}
+  - {name: updated_at, type: string, format: date-time}
+  operations:
+  - GET /public/api/v1/jobs/{jobNumber}
+  - POST /public/api/v1/jobs/create
+  - POST /public/api/v1/jobs/{jobNumber}/complete
+  - GET /public/api/v2/jobs/{jobNumber}
+  - POST /public/api/v2/jobs
+  - POST /public/api/v2/jobs/{jobNumber}/status
+  - POST /public/api/v2/jobs/{jobNumber}/approve
+  - POST /public/api/v2/jobs/{jobNumber}/rematch
+  - PATCH /public/api/v2/jobs/{jobNumber}/delete
+- name: JobDocument
+  description: A document attached to a job (the invoice itself, or a baseline document).
+  primary_key: id (uuid)
+  fields:
+  - {name: id, type: string, format: uuid}
+  - {name: job_id, type: string, format: uuid}
+  - {name: document_type, type: string, note: 'e.g. Invoice'}
+  operations:
+  - POST /public/api/v1/jobs/{jobNumber}/upload
+- name: JobDocumentVersion
+  description: One uploaded revision of a job document, carrying that revision's matching result.
+  primary_key: id (uuid)
+  fields:
+  - {name: id, type: string, format: uuid}
+  - {name: job_document_id, type: string, format: uuid}
+  - {name: filename, type: string}
+  - {name: storage_url, type: string, note: object-store URI}
+  - {name: update_by, type: string, format: uuid, note: user id}
+  - {name: version_number, type: integer}
+  operations:
+  - PUT /public/api/v1/jobs/{jobNumber}/job_documents/{documentId}
+- name: MatchingLineItems
+  description: >-
+    The audit output — one row per charge, pairing the invoiced quantity/price/amount against the
+    matched baseline quantity/price/amount, with currency and exchange rate.
+  primary_key: id (uuid)
+  fields:
+  - {name: charge_type, type: string}
+  - {name: document, type: string}
+  - {name: invoice_amount, type: number}
+  - {name: invoice_price, type: number}
+  - {name: invoice_quantity, type: number}
+  - {name: invoice_currency, type: string}
+  - {name: invoice_tax, type: number}
+  - {name: invoice_before_tax, type: number}
+  - {name: invoice_unit, type: string}
+  - {name: matched_amount, type: number}
+  - {name: matched_price, type: number}
+  - {name: matched_quantity, type: number}
+  - {name: matched_currency, type: string}
+  - {name: matched_unit, type: string}
+  - {name: exchange_rate, type: integer}
+- name: InvoiceInfo
+  description: Structured data extracted from the invoice document.
+  fields:
+  - {name: number, type: string}
+  - {name: date, type: string, format: date-time}
+  - {name: due_date, type: string, format: date-time}
+  - {name: payment_terms, type: string}
+  - {name: amount_due, type: number}
+  - {name: currency, type: string}
+  - {name: seller, type: object}
+  - {name: buyer, type: object}
+  - {name: payment_information, type: object}
+  - {name: metadata, type: object, note: free-form extracted key/values}
+- name: LineItems
+  description: A line item as read off the invoice, before matching.
+  fields:
+  - {name: description, type: string}
+  - {name: quantity, type: integer}
+  - {name: unit_price, type: number}
+  - {name: currency, type: string}
+  - {name: total, type: integer}
+- name: NewJobResponse
+  description: The reduced Job projection returned by job creation.
+  fields:
+  - {name: id, type: string, format: uuid}
+  - {name: job_number, type: string}
+  - {name: provider_id, type: string, format: uuid}
+  - {name: merbership_id, type: string, format: uuid, note: 'spelled "merbership_id" in the published spec — a typo in the contract, not here'}
+- name: User
+  description: A platform user. Schema is not declared in the published Swagger definition.
+  schema_published: false
+  operations:
+  - GET /public/api/v1/users
+  - GET /public/api/v1/users/{userId}
+  - POST /public/api/v1/users/
+  - PATCH /public/api/v1/users/{userId}
+  - PATCH /public/api/v1/users/assign/role
+- name: Role
+  description: A permission role assignable to a user. Schema is not declared in the published Swagger definition.
+  schema_published: false
+  operations:
+  - GET /public/api/v1/roles
+relationships:
+- {from: Job, to: JobDocument, type: has_many, via: job_documents, inverse_field: job_id, evidence: '$ref #/definitions/JobDocument'}
+- {from: JobDocument, to: Job, type: belongs_to, via: job_id, evidence: id-reference field}
+- {from: JobDocument, to: JobDocumentVersion, type: has_many, via: jobdocumentversions, inverse_field: job_document_id, evidence: '$ref #/definitions/JobDocumentVersion'}
+- {from: JobDocumentVersion, to: JobDocument, type: belongs_to, via: job_document_id, evidence: id-reference field}
+- {from: JobDocumentVersion, to: MatchingLineItems, type: has_many, via: matching_info, evidence: '$ref #/definitions/MatchingLineItems'}
+- {from: JobDocumentVersion, to: User, type: belongs_to, via: update_by, evidence: id-reference field, confidence: medium}
+- {from: Job, to: InvoiceInfo, type: has_one, via: invoice_info, evidence: '$ref #/definitions/InvoiceInfo'}
+- {from: InvoiceInfo, to: LineItems, type: has_many, via: line_items, evidence: '$ref #/definitions/LineItems'}
+- {from: Job, to: Provider, type: has_one, via: provider, evidence: inline object, confidence: medium, note: 'Provider (the supplier) is an inline untyped object with no definition of its own; NewJobResponse exposes provider_id, so a Provider entity exists server-side but is not modelled in the contract.'}
+- {from: User, to: Role, type: has_many, via: 'PATCH /users/assign/role', evidence: operation, confidence: medium}
+gaps:
+- User, Role and Provider have no declared schema anywhere in the published contract.
+- The Job.status enumeration is not published, so the state machine cannot be derived.
+- >-
+  The v2 job surface (search, status, approve, rematch, delete) has no schemas at all — those
+  operations exist only in the Postman collection, which carries example bodies but no definitions.

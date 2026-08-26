@@ -1,0 +1,100 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/openenvoy-openapi.json + postman/openenvoy-postman-collection.json
+status: candidate
+note: >-
+  OpenEnvoy ships NO MCP server. This file is a derived candidate tool list showing what an MCP
+  server over the published REST surface would expose; it is not a discovered agent surface, and no
+  MCPServer pointer is emitted in apis.yml. Searched the docs, the changelog, the support knowledge
+  base, the GitHub organization (0 public repos) and npm — no hosted endpoint and no stdio package
+  exists. Note that OpenEnvoy does ship in-product AI agents ("Ask OE", "Job Agent", per the
+  2026-08-24 changelog entry), so there is an agent story here, but it is confined to their own UI
+  and is not exposed to external agents through any protocol.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: derived
+  note: >-
+    auth is recorded as api-key because that is what the underlying REST API requires
+    (X-CLIENT-ID + Authorization Bearer) if a server were built; it does not describe a shipped
+    server.
+candidate_tools:
+- name: get_job
+  description: Retrieve a job (an invoice under audit) with its documents, matching results and extracted invoice data.
+  rest: GET /public/api/v1/jobs/{jobNumber}
+  read_only: true
+- name: create_job
+  description: Start a new job by uploading a provider invoice.
+  rest: POST /public/api/v1/jobs/create
+  read_only: false
+  consequence: creates a new invoice job
+- name: upload_job_document
+  description: Attach a baseline document (PO, contract, rate sheet, receipt) to an existing job.
+  rest: POST /public/api/v1/jobs/{jobNumber}/upload
+  read_only: false
+- name: complete_job_creation
+  description: Close the job creation process so matching can run.
+  rest: POST /public/api/v1/jobs/{jobNumber}/complete
+  read_only: false
+- name: update_job_document_version
+  description: Upload a new version of an existing job document.
+  rest: PUT /public/api/v1/jobs/{jobNumber}/job_documents/{documentId}
+  read_only: false
+- name: search_jobs
+  description: Search/list jobs.
+  rest: POST /public/api/v2/jobs
+  read_only: true
+  note: request body schema is not published
+- name: get_job_v2
+  description: Retrieve a job via the v2 surface.
+  rest: GET /public/api/v2/jobs/{jobNumber}
+  read_only: true
+- name: set_job_status
+  description: Change a job's status.
+  rest: POST /public/api/v2/jobs/{jobNumber}/status
+  read_only: false
+  consequence: state transition; permitted transitions are unpublished
+- name: approve_job
+  description: Approve a job, advancing it toward payment.
+  rest: POST /public/api/v2/jobs/{jobNumber}/approve
+  read_only: false
+  consequence: high — approves an invoice for payment; no documented reversal window
+- name: rematch_job
+  description: Re-run the matching engine against the job's documents.
+  rest: POST /public/api/v2/jobs/{jobNumber}/rematch
+  read_only: false
+- name: delete_job
+  description: Delete a job.
+  rest: PATCH /public/api/v2/jobs/{jobNumber}/delete
+  read_only: false
+  consequence: high
+- name: list_users
+  description: List platform users.
+  rest: GET /public/api/v1/users
+  read_only: true
+- name: get_user
+  description: Retrieve a single user.
+  rest: GET /public/api/v1/users/{userId}
+  read_only: true
+- name: create_user
+  description: Create a platform user.
+  rest: POST /public/api/v1/users/
+  read_only: false
+- name: update_user
+  description: Update a platform user.
+  rest: PATCH /public/api/v1/users/{userId}
+  read_only: false
+- name: assign_role
+  description: Assign a role to a user.
+  rest: PATCH /public/api/v1/users/assign/role
+  read_only: false
+- name: list_roles
+  description: List assignable roles.
+  rest: GET /public/api/v1/roles
+  read_only: true
+coverage:
+  rest_operations: 17
+  candidate_tools: 17

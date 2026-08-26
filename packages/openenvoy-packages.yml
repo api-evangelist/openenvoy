@@ -1,0 +1,47 @@
+generated: '2026-08-26'
+method: probed
+source: registry searches on npm, PyPI, RubyGems, crates.io, Packagist + https://github.com/openenvoy
+package_count: 0
+packages: []
+note: >-
+  No first-party OpenEnvoy SDK or client library exists in any public package registry, and no SDK
+  is offered on the developer surface. No SDKs pointer is emitted in apis.yml, because this file
+  records an absence rather than a shipped artifact.
+  Integration is expected to be direct REST plus the published Postman collection, or via the
+  prebuilt ERP connectors (SAP, Oracle, NetSuite, Dynamics, QuickBooks Online) which are product
+  features rather than developer packages.
+registries_probed:
+- registry: npm
+  query: openenvoy
+  endpoint: https://registry.npmjs.org/-/v1/search?text=openenvoy
+  status: 200
+  results: 0
+- registry: pypi
+  package: openenvoy
+  endpoint: https://pypi.org/pypi/openenvoy/json
+  status: 404
+  version: null
+- registry: rubygems
+  package: openenvoy
+  endpoint: https://rubygems.org/api/v1/gems/openenvoy.json
+  status: 404
+  version: null
+- registry: crates.io
+  package: openenvoy
+  endpoint: https://crates.io/api/v1/crates/openenvoy
+  status: 403
+  version: null
+  note: crates.io rejected our unauthenticated client; treated as no-result rather than confirmed-absent.
+- registry: packagist
+  package: openenvoy/openenvoy
+  endpoint: https://repo.packagist.org/p2/openenvoy/openenvoy.json
+  status: 404
+  version: null
+source_repositories:
+  github_org: https://github.com/openenvoy
+  github_org_verified: true
+  public_repos: 0
+  note: >-
+    The GitHub organization is confirmed to be OpenEnvoy's (org name "OpenEnvoy", blog
+    https://www.openenvoy.com/, created 2020-05-17) but publishes zero public repositories, so
+    there is no source-distributed client either.

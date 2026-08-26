@@ -1,0 +1,28 @@
+generated: '2026-08-26'
+method: searched
+source: https://apidocs.openenvoy.io/ + openapi/openenvoy-openapi.json + live probe
+limit_count: 0
+rate_limits: []
+headers: []
+status_code_on_exhaustion: null
+note: >-
+  OpenEnvoy publishes no rate limits. The API documentation at apidocs.openenvoy.io covers
+  authentication, methods, data formats and error classes but states no quota, throttle, burst or
+  concurrency limit; the Swagger 2.0 definition declares no 429 response on any operation; and no
+  RateLimit-*, X-RateLimit-* or Retry-After header appears in any of the saved example responses in
+  the Postman collection. An anonymous probe of GET /public/api/v1/jobs/1 on 2026-08-26 returned
+  HTTP 400 with no rate-limit headers on the response.
+  This is an honest zero: limits may well be enforced server-side per customer contract, but nothing
+  is published, so an agent cannot pace itself or back off correctly, and cannot distinguish
+  throttling from failure.
+evidence:
+- url: https://apidocs.openenvoy.io/
+  status: 200
+  finding: no rate-limit section
+- url: https://backend.openenvoy.io/public/api/v1/jobs/1
+  status: 400
+  finding: no rate-limit headers on response
+gaps:
+- No documented limit of any kind.
+- No 429 declared in the contract.
+- No Retry-After or RateLimit-* response headers.

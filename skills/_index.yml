@@ -1,0 +1,49 @@
+generated: '2026-08-26'
+method: generated
+source: openapi/openenvoy-openapi.json + postman/openenvoy-postman-collection.json
+api: OpenEnvoy API
+note: >-
+  Packaged Agent Skills authored by API Evangelist from OpenEnvoy's own published contract. Every
+  path, parameter, header, field name and error string referenced in these skills is taken verbatim
+  from the provider's published Swagger 2.0 definition or public Postman collection. OpenEnvoy
+  publishes no skills or AGENTS.md of its own; searched 2026-08-26.
+skills:
+- name: openenvoy-submit-invoice-for-audit
+  file: openenvoy-submit-invoice-for-audit.md
+  description: Submit an invoice, attach baseline documents, complete the job, and read the matching result.
+  api_version: v1
+  operations:
+  - POST /public/api/v1/jobs/create
+  - POST /public/api/v1/jobs/{jobNumber}/upload
+  - POST /public/api/v1/jobs/{jobNumber}/complete
+  - GET /public/api/v1/jobs/{jobNumber}
+  write_surface: true
+  requires_human_confirmation: false
+- name: openenvoy-review-and-approve-job
+  file: openenvoy-review-and-approve-job.md
+  description: Search jobs, inspect matching discrepancies, rematch, and approve/reject.
+  api_version: v2
+  operations:
+  - POST /public/api/v2/jobs
+  - GET /public/api/v2/jobs/{jobNumber}
+  - POST /public/api/v2/jobs/{jobNumber}/rematch
+  - POST /public/api/v2/jobs/{jobNumber}/status
+  - POST /public/api/v2/jobs/{jobNumber}/approve
+  - PATCH /public/api/v2/jobs/{jobNumber}/delete
+  write_surface: true
+  requires_human_confirmation: true
+  confirmation_reason: >-
+    approve advances an invoice toward payment and has no documented reversal window
+- name: openenvoy-manage-users-and-roles
+  file: openenvoy-manage-users-and-roles.md
+  description: Provision, update and role-assign platform users.
+  api_version: v1
+  operations:
+  - GET /public/api/v1/users
+  - GET /public/api/v1/users/{userId}
+  - POST /public/api/v1/users/
+  - PATCH /public/api/v1/users/{userId}
+  - PATCH /public/api/v1/users/assign/role
+  - GET /public/api/v1/roles
+  write_surface: true
+  requires_human_confirmation: false

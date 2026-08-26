@@ -1,23 +1,117 @@
 aid: openenvoy
 name: OpenEnvoy
-description: 'OpenEnvoy is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'OpenEnvoy is an AI-native financial operations platform for enterprise and mid-market
+  finance teams, automating accounts payable, accounts receivable, invoice processing and cash
+  application end to end. The platform ingests invoices from any format, extracts and GL-codes the
+  data without OCR templates, and reconciles each invoice against purchase orders, contracts, rate
+  sheets and receipts to catch duplicates, fraud and supplier overbilling before payment. OpenEnvoy
+  publishes a public RESTful API covering job (invoice) creation, document upload, matching status
+  and user/role administration, documented as a public Postman collection at apidocs.openenvoy.io
+  with a Swagger 2.0 definition served from the API host itself. It integrates with SAP, Oracle,
+  NetSuite, Microsoft Dynamics and QuickBooks Online.'
 url: https://raw.githubusercontent.com/api-evangelist/openenvoy/refs/heads/main/apis.yml
+image: https://avatars.githubusercontent.com/u/65476969?v=4
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
-- Company
-apis: []
+- Accounts Payable
+- Accounts Receivable
+- Invoice Processing
+- Finance Automation
+- Accounting
+- Procure to Pay
+- Document Processing
+- Artificial Intelligence
+- ERP Integration
+- Spend Management
+apis:
+- aid: openenvoy-api
+  name: OpenEnvoy API
+  description: 'The OpenEnvoy public REST API. Jobs are the core object: a job is an invoice under
+    audit, created by uploading a provider invoice, optionally supplemented with baseline documents
+    (purchase orders, contracts, rate sheets, receipts), then completed so OpenEnvoy can run its
+    matching engine and return line-item level matched amounts. The v1 surface covers job creation,
+    document upload and versioning, job retrieval, and user/role administration; the v2 surface adds
+    job search, status changes, approval, rematch and delete. Authentication is a per-customer
+    client id plus a bearer token issued by OpenEnvoy customer success.'
+  humanURL: https://apidocs.openenvoy.io/
+  baseURL: https://backend.openenvoy.io/public/api/v1
+  tags:
+  - Jobs
+  - Invoices
+  - Documents
+  - Users
+  - Matching
+  properties:
+  - type: OpenAPI
+    url: openapi/openenvoy-openapi.json
+  - type: Postman
+    url: postman/openenvoy-postman-collection.json
+  - type: Documentation
+    url: https://apidocs.openenvoy.io/
+  - type: APIReference
+    url: https://backend.openenvoy.io/api-docs
+  - type: Authentication
+    url: authentication/openenvoy-authentication.yml
+  - type: ErrorCatalog
+    url: errors/openenvoy-problem-types.yml
+  - type: Conventions
+    url: conventions/openenvoy-conventions.yml
+  - type: DataModel
+    url: data-model/openenvoy-data-model.yml
+  - type: Overlay
+    url: overlays/openenvoy-openapi-overlay.yaml
+  - type: RateLimits
+    url: rate-limits/openenvoy-rate-limits.yml
+  - type: Conformance
+    url: conformance/openenvoy-conformance.yml
+  - type: AgentSkill
+    url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/openenvoy-domain-security.yml
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.openenvoy.com/
+- type: Documentation
+  url: https://apidocs.openenvoy.io/
+- type: APIReference
+  url: https://backend.openenvoy.io/api-docs
+- type: Support
+  url: https://support.openenvoy.com/
+- type: HelpCenter
+  url: https://support.openenvoy.com/
+- type: Blog
+  url: https://www.openenvoy.com/blog
+- type: Pricing
+  url: https://www.openenvoy.com/pricing
+- type: TermsOfService
+  url: https://www.openenvoy.com/services-agreement
+- type: GettingStarted
+  url: https://support.openenvoy.com/collections/5817344542-getting_started
+- type: PrivacyPolicy
+  url: https://www.openenvoy.com/privacy-policy
+- type: GitHubOrganization
+  url: https://github.com/openenvoy
+- type: ChangeLog
+  url: https://changelog.openenvoy.io/
+- type: StatusPage
+  url: https://status.openenvoy.com/
+- type: Lifecycle
+  url: lifecycle/openenvoy-lifecycle.yml
+- type: LLMsTxt
+  url: llms/openenvoy-llms.txt
+- type: Plans
+  url: plans/openenvoy-plans-pricing.yml
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1

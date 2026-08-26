@@ -1,0 +1,75 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/openenvoy-openapi.json + postman/openenvoy-postman-collection.json + live probe
+format: proprietary-json
+rfc9457: false
+envelope:
+  content_type: application/json
+  fields:
+  - name: errorCode
+    description: Opaque OpenEnvoy error code. Observed form is E00NNN, mirroring the HTTP status.
+  - name: errorMessage
+    description: Human-readable message.
+  - name: key
+    description: >-
+      The offending request element (header name, field name). Present on validation failures;
+      this is the field that makes the envelope machine-actionable.
+  example: '{"errorCode":"E00400","errorMessage":"Invalid/Missing Header","key":"Authorization"}'
+  source: 'live anonymous probe of GET https://backend.openenvoy.io/public/api/v1/jobs/1 on 2026-08-26'
+  note: >-
+    The envelope is NOT RFC 9457 problem+json: it returns application/json with proprietary keys and
+    no type/title/status/detail/instance members. The published Swagger 2.0 definition does not
+    describe the error envelope at all — every 400 response is declared with a bare description and
+    no schema — so the shape above is known only from a live probe, not from the contract.
+status_classes:
+- code: 2xx
+  meaning: Request is processed successfully
+  source: https://apidocs.openenvoy.io/
+- code: 4xx
+  meaning: Bad Request
+  source: https://apidocs.openenvoy.io/
+- code: 5xx
+  meaning: Server error
+  source: https://apidocs.openenvoy.io/
+problem_types:
+- code: E00400
+  http_status: 400
+  title: Invalid/Missing Header
+  detail: A required authentication header (X-CLIENT-ID or Authorization) is absent or malformed.
+  remediation: >-
+    Send both X-CLIENT-ID and Authorization: Bearer {auth_token}. The `key` field names which header
+    failed.
+  method: probed
+  evidence: 'GET /public/api/v1/jobs/1 with no headers -> 400'
+- http_status: 400
+  title: Bad Request
+  detail: Generic validation failure returned by job create, upload, complete and document update.
+  operations:
+  - POST /jobs/create
+  - POST /jobs/{jobNumber}/upload
+  - POST /jobs/{jobNumber}/complete
+  - PUT /jobs/{jobNumber}/job_documents/{documentId}
+  method: derived
+  evidence: openapi/openenvoy-openapi.json responses.400
+- http_status: 400
+  title: 'Bad request: Email exists'
+  detail: Create user rejected because the email address is already registered.
+  operations:
+  - POST /users/
+  method: derived
+  evidence: postman/openenvoy-postman-collection.json saved response
+- http_status: 400
+  title: 'Bad request: External ID exists'
+  detail: Create user rejected because the supplied external ID is already in use.
+  operations:
+  - POST /users/
+  method: derived
+  evidence: postman/openenvoy-postman-collection.json saved response
+gaps:
+- >-
+  No public error-code registry is published. E00400 is the only code observed; the numbering scheme
+  implies others exist but they are not documented anywhere reachable without credentials.
+- >-
+  Authentication failure returns 400, not 401, and no WWW-Authenticate header is sent. An agent
+  cannot distinguish a bad credential from a bad payload by status code alone.
+- No 401, 403, 404, 429 or 5xx responses are declared anywhere in the published contract.

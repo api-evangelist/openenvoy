@@ -1,0 +1,68 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the OpenEnvoy API
+  version: 1.0.0
+extends: ../openapi/openenvoy-openapi.json
+x-provenance:
+  generated: '2026-08-26'
+  method: generated
+  source: >-
+    API Evangelist enrichment pass. Captures corrections and additions derived from the provider's
+    own published Postman collection and from live probes, WITHOUT mutating the original spec.
+  note: >-
+    The original openapi/openenvoy-openapi.json is the provider's verbatim Swagger 2.0 document and
+    is never edited. Everything below is our annotation.
+actions:
+- target: $.info
+  description: Record the true host, the missing v2 surface and the transport defect.
+  update:
+    x-api-evangelist-notes:
+      published_at: https://backend.openenvoy.io/api-docs/swagger-ui-init.js
+      docs: https://apidocs.openenvoy.io/
+      spec_version: Swagger 2.0 (pre-dates OpenAPI 3.0)
+      coverage_gap: >-
+        This definition describes 5 of the 17 operations OpenEnvoy publishes. The Users/Roles
+        surface and the entire v2 job lifecycle surface (search, status, approve, rematch, delete)
+        appear only in the public Postman collection.
+- target: $.schemes
+  description: >-
+    The definition declares plaintext HTTP only. The deployment serves HTTPS and the provider's own
+    Postman collection uses https:// throughout, so the declared scheme is a defect that would make
+    a generated client send a bearer token in the clear.
+  update:
+    x-api-evangelist-correction:
+      declared: [http]
+      actual: [https]
+      severity: high
+- target: $.securityDefinitions
+  description: >-
+    X-CLIENT-ID is required on every operation but is modelled as a plain header parameter rather
+    than a security scheme, so a generated client honouring only securityDefinitions sends an
+    incomplete credential and receives HTTP 400.
+  update:
+    x-api-evangelist-suggested:
+      clientId:
+        type: apiKey
+        in: header
+        name: X-CLIENT-ID
+        description: Per-customer client identifier issued by OpenEnvoy customer success.
+- target: $.paths[*][*]
+  description: Every operation lacks an operationId and a summary, which blocks stable client generation and tool binding.
+  update:
+    x-api-evangelist-gap:
+      missing_operation_id: true
+      missing_summary: true
+- target: $.paths[*][*].responses
+  description: >-
+    No operation declares 401, 403, 404, 429 or any 5xx response, and the 400 responses carry no
+    schema. The live error envelope is known only from probing.
+  update:
+    x-api-evangelist-observed-error-envelope:
+      content_type: application/json
+      example: '{"errorCode":"E00400","errorMessage":"Invalid/Missing Header","key":"Authorization"}'
+      probed: '2026-08-26'
+      see: ../errors/openenvoy-problem-types.yml
+- target: $.definitions.NewJobResponse.properties
+  description: The property `merbership_id` is a misspelling of `membership_id` in the published contract.
+  update:
+    x-api-evangelist-note: 'field name "merbership_id" appears to be a typo for "membership_id"; recorded, not corrected'

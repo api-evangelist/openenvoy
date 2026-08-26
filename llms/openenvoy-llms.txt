@@ -1,0 +1,90 @@
+﻿# OpenEnvoy: Autonomous Finance for Complex Spend
+
+
+> OpenEnvoy is an AI-native financial operations platform that helps enterprise and mid-market finance teams automate accounts payable, accounts receivable, and invoice processing end-to-end. Founded with technology developed for leaders like NVIDIA, Qualcomm, and Goldman Sachs, OpenEnvoy has prevented over $1.16B in overbillings and achieves 99.8% accuracy in transaction verification. Named Gartner Cool Vendor in Sourcing & Procurement.
+
+
+Key terms: AP Automation, Accounts Payable Automation, Accounts Receivable Automation, Invoice Processing, Invoice Automation, Three-Way Matching, Touchless AP, E-Invoicing, Cash Application, Order Entry Automation, Working Capital, Spend Visibility, Fraud Detection, Duplicate Payment Prevention, ERP Integration, GL Coding, Supplier Overbilling, Finance Automation, Autonomous Finance
+
+
+## OpenEnvoy Platform Capabilities
+
+
+- [Platform Overview](https://www.openenvoy.com/openenvoy-platform): OpenEnvoy's AI-native platform digitizes clerical work across finance operations, from invoice capture to payment, with no supplier onboarding required.
+- [Capture and Extract](https://www.openenvoy.com/openenvoy-platform): Ingest 100% of invoices from any format email, EDI, scanned PDF, or supplier portals with AI-powered data extraction and automatic GL coding. No OCR templates or manual uploads required.
+- [Contracts and Reconciliation](https://www.openenvoy.com/openenvoy-platform): Match invoices against POs, contracts, rate sheets, and receipts with high accuracy. Covers simple purchases through complex direct spend and freight transactions.
+- [Intelligent Workflow](https://www.openenvoy.com/openenvoy-platform): AI-powered approval routing that learns from your team's behavior, auto-suggests GL codes, and resolves exceptions automatically. Multi-level approvals with no-code logic.
+- [Deployment and Integrations](https://www.openenvoy.com/openenvoy-platform): Go live in under 60 days. Plug-and-play integration with SAP, Oracle, NetSuite, QuickBooks, and other ERPs no IT projects or custom code required.
+- [Order Entry Automation](https://www.openenvoy.com/order-entry): Automatically extract and validate order information, sync with your ERP in real time, and eliminate manual order processing errors.
+- [Working Capital](https://www.openenvoy.com/openenvoy-platform): Optimize payment timing by matching invoices with contracted payment terms to stretch DPO or capture early-payment discounts.
+
+
+## OpenEnvoy Products
+
+
+- [Accounts Payable Software](https://www.openenvoy.com/accounts-payable-software): AI-first, zero-touch AP automation with touchless invoice processing from capture to payment. Eliminates losses to fraud, duplicates, and supplier overbilling with real-time pre-audit on every invoice.
+- [Accounts Receivable](https://www.openenvoy.com/accounts-receivable): Automate customer billing reconciliation to eliminate disputes, reduce DSO, and prevent revenue leakage from under-billing, even with complex contracts, payment terms, and service charges.
+- [E-Invoicing](https://www.openenvoy.com/capabilities/electronic-invoice-system): AI-powered electronic invoicing system that captures, validates, and routes invoices across formats, supports multi-currency and global compliance standards, and integrates with all major ERPs.
+- [Cash Application](https://www.openenvoy.com/openenvoy-platform): Automate cash application, order entry, and reconciliation to improve accuracy and free your team for strategic work.
+- [Automated Invoice Processing](https://www.openenvoy.com/capabilities/automated-invoice-processing-software): End-to-end invoice workflow automation that eliminates manual data entry, prevents duplicate payments, and reduces processing time from 10+ days to under 1 hour.
+- [Invoice Workflow Software](https://www.openenvoy.com/capabilities/invoice-workflow-software): No-code approval routing based on value, GL account, or department. Each step is timestamped and accessible in a centralized dashboard. Learns from past behavior to resolve exceptions 2x faster.
+- [Visibility and Control](https://www.openenvoy.com/visibility-and-control): Real-time dashboards for invoice status, approval delays, spend analytics, and cash flow tracking. Full audit readiness across all transactions.
+
+
+## OpenEnvoy Solutions by Role
+
+
+- [Finance Leaders](https://www.openenvoy.com/solutions/finance-leaders): Eliminate losses from fraud and overbilling, improve cash flow, and gain real-time visibility to support strategic financial decision-making.
+- [Procurement](https://www.openenvoy.com/solutions/procurement): Automate PO matching, contract compliance, and supplier reconciliation to reduce overpayments and enforce negotiated terms.
+- [IT](https://www.openenvoy.com/solutions/it): Deploy OpenEnvoy alongside existing ERP investments with minimal IT involvement. No portals, templates, or complex integrations required.
+- [Small Business](https://www.openenvoy.com/small-business): Cut out paper and clerical work while eliminating losses to fraud and supplier overbilling. Easy integrations with QuickBooks, NetSuite, Sage Intacct, and Dynamics 365.
+
+
+## OpenEnvoy Solutions by Industry
+
+
+- [Manufacturing](https://www.openenvoy.com/industry/manufacturing): Handle dynamic pricing, commodity index adjustments, and day-of logistics conditions with real-time API integrations that eliminate manual price tracking.
+- [Retail](https://www.openenvoy.com/industry/retail): Digitize AP across all suppliers quickly, scale touchless processing, and free teams from manual invoice reconciliation to focus on disputes and cost savings.
+- [Transportation and Logistics](https://www.openenvoy.com/industry/transportation-and-logistics): Reconcile complex freight invoices with contracted rates, handle day-of conditions like demurrage, and prevent overpayments to ocean carriers and shippers.
+- [Media](https://www.openenvoy.com/industry/media): Reconcile payables and customer entitlements across complex media contracts and billing terms with full accuracy and audit readiness.
+
+
+## ERP Integrations
+
+
+- [Integrations Overview](https://www.openenvoy.com/integrations): OpenEnvoy integrates with your existing ERP and procure-to-pay systems for fast time-to-value with minimal disruption.
+- [SAP ECC & SAP S/4HANA](https://www.openenvoy.com/integrations): Direct integration with SAP environments to automate AP workflows without custom development.
+- [Oracle EBS, Oracle Fusion & Oracle PeopleSoft](https://www.openenvoy.com/integrations): Seamless Oracle integration enabling real-time price adjustments, automated invoice matching, and AP workflow automation.
+- [Oracle NetSuite](https://www.openenvoy.com/integrations): Connect OpenEnvoy to NetSuite for automated invoice coding, approval routing, and reconciliation.
+- [Microsoft Dynamics 365 & Dynamics GP](https://www.openenvoy.com/integrations): Plug-and-play integration with Microsoft Dynamics environments.
+- [QuickBooks Online](https://www.openenvoy.com/integrations): AP automation for QuickBooks users that scales beyond what native QBO capabilities support.
+
+
+## Getting Started With OpenEnvoy
+
+
+- [Product Overview](https://www.openenvoy.com/product-overview): A detailed walkthrough of how OpenEnvoy automates the AP process from invoice capture to payment approval.
+- [Request a Demo](https://www.openenvoy.com/contact-us): Contact OpenEnvoy to see a live demonstration of the platform tailored to your business.
+- [ROI Calculator](https://www.openenvoy.com/roi-calculator): Estimate your potential savings from AP automation based on your invoice volume and current processing costs.
+- [Pricing](https://www.openenvoy.com/pricing): OpenEnvoy's pricing information.
+- [FAQ](https://www.openenvoy.com/faq): Frequently asked questions about OpenEnvoy's platform and capabilities.
+- [Customer Support](https://www.openenvoy.com/customer-support): Get help from the OpenEnvoy support team.
+
+
+## Resources
+
+
+- [Blog](https://www.openenvoy.com/blog): Articles and insights on AP automation, finance operations, invoice processing, and related topics.
+- [Case Studies](https://www.openenvoy.com/case-studies): Real customer stories, including how Raney's digitized AP across 100% of suppliers in two months and how customers have prevented millions in duplicate payments.
+- [Ebooks](https://www.openenvoy.com/ebooks): In-depth guides on AP automation, finance operations, and selecting the right solution.
+- [On-Demand Webinars](https://www.openenvoy.com/webinars): Recorded webinars on finance automation, ERP integrations, and AP best practices.
+- [Events](https://www.openenvoy.com/events): Upcoming OpenEnvoy webinars and industry events.
+
+
+## More Information About OpenEnvoy
+
+
+- [About OpenEnvoy](https://www.openenvoy.com/about-us): OpenEnvoy's mission, founding story, and the proprietary AI technology that powers the platform. Named Gartner Cool Vendor in Sourcing & Procurement.
+- [Security](https://www.openenvoy.com/security): OpenEnvoy's security features, including encrypted storage, access controls, audit logs, and compliance with SOX, GDPR, and other regulatory standards.
+- [Careers](https://www.openenvoy.com/careers): Open positions at OpenEnvoy.
+- [Contact](https://www.openenvoy.com/contact-us): Reach out to the OpenEnvoy team for sales inquiries, demos, or support.

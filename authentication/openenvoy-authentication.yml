@@ -1,0 +1,64 @@
+generated: '2026-08-26'
+method: searched
+source: https://apidocs.openenvoy.io/ (collection description) + openapi/openenvoy-openapi.json
+docs: https://apidocs.openenvoy.io/
+summary:
+  model: dual-header static credential
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  oauth2: false
+  openid_connect: false
+  mutual_tls: false
+  note: >-
+    OpenEnvoy requires TWO headers on every request, not one. The published Swagger 2.0 definition
+    declares only the Authorization scheme as a securityDefinition and carries X-CLIENT-ID as an
+    ordinary required header parameter on each operation, so a generated client that honours only
+    securityDefinitions will send an incomplete credential and receive HTTP 400.
+schemes:
+- name: jwt
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: 'Bearer {auth_token}'
+  required: true
+  declared_in_spec: true
+  sources:
+  - openapi/openenvoy-openapi.json
+  - postman/openenvoy-postman-collection.json
+- name: client-id
+  type: apiKey
+  in: header
+  parameter: X-CLIENT-ID
+  required: true
+  declared_in_spec: false
+  note: >-
+    Required on all 17 published operations but modelled as a plain header parameter rather than a
+    securityDefinition. Present on every request in the Postman collection.
+  sources:
+  - openapi/openenvoy-openapi.json
+  - postman/openenvoy-postman-collection.json
+credential_issuance:
+  self_serve: false
+  method: contact-customer-success
+  contact: support@openenvoy.com
+  statement: >-
+    "If you are an existing customer, please contact our customer success team at
+    support@openenvoy.com for client_id and auth_token. Keep them in a secure place."
+  source: https://apidocs.openenvoy.io/
+  note: >-
+    Credentials are issued to existing customers only; there is no public self-service key
+    provisioning on the developer surface. OpenEnvoy's own newsroom describes a self-serve API in
+    which a user generates an API key from inside the product, which is an authenticated
+    in-product flow rather than an anonymous developer signup.
+rotation:
+  documented: false
+  note: No credential rotation, expiry or revocation policy is published on the public docs surface.
+observed:
+  - probe: 'GET https://backend.openenvoy.io/public/api/v1/jobs/1 (no headers)'
+    http_status: 400
+    body: '{"errorCode":"E00400","errorMessage":"Invalid/Missing Header","key":"Authorization"}'
+    note: >-
+      Anonymous probe on 2026-08-26. The API rejects a missing credential with HTTP 400 and a
+      structured error naming the offending header, not the conventional 401 Unauthorized.

@@ -1,0 +1,95 @@
+generated: '2026-08-26'
+method: searched
+source: https://changelog.openenvoy.io/
+url: https://changelog.openenvoy.io/
+http_status: 200
+feed:
+  url: https://changelog.openenvoy.io/rss
+  format: RSS 2.0
+  http_status: 200
+  note: >-
+    A real machine-readable RSS 2.0 feed with dated items and dc:creator attribution. It carries
+    <meta name="robots" content="none"/> inside the channel, so OpenEnvoy is publishing the feed
+    while asking crawlers not to index it.
+scheme:
+  style: semver-major-only
+  format: 'Release Notes - vNNN.0.0'
+  current_version: v141.0.0
+  cadence: roughly biweekly numbered releases, interleaved with dated feature announcements
+  note: >-
+    Release numbering is product-release numbering (v135 through v141 observed across May-August
+    2026), NOT API versioning. The API is versioned separately as /public/api/v1 and /public/api/v2.
+    No changelog entry in the captured window announces an API contract change, and the changelog
+    does not have an API or developer category.
+scope:
+  audience: product/end-user
+  api_changes_covered: false
+  categories_observed:
+  - Accounts Payable
+  - Accounts Receivable
+  - AP Core
+entries:
+- date: '2026-08-24'
+  title: AI Matching Summary on Job Details
+  category: Accounts Payable
+  breaking: false
+  highlights:
+  - Generate a plain-language Matching Summary explaining what is blocking a job and how to clear it.
+  - Summary is stamped with a generated-at time and persists inline; regenerable as data changes.
+  - '"Ask OE" link opens the Job Agent primed with that job''s matching context.'
+- date: '2026-08-18'
+  version: v141.0.0
+  title: Release Notes - v141.0.0
+  category: Accounts Payable
+  breaking: false
+  highlights:
+  - Resizable, per-user-persisted table columns across jobs, documents, orders, payments, expenses.
+  - Persistent table sort on Inbox, Documents & Sources and Home job list.
+  - Bulk actions on completed jobs, including bulk re-open and bulk re-submit of failed-sync jobs.
+  - Link supporting documents to a job after matching and sync.
+  - Live auto-refreshing job details while a job is in matching status.
+  - Unsupported spend added as a job-list column and filter.
+- date: '2026-08-04'
+  title: Faster Job Navigation
+  category: Accounts Payable
+  breaking: false
+- date: '2026-07-31'
+  title: Pin, Rename & Delete Chats
+  category: Accounts Receivable
+  breaking: false
+- date: '2026-07-21'
+  version: v139.0.0
+  title: Release Notes - v139.0.0
+  category: Accounts Payable
+  breaking: false
+- date: '2026-07-07'
+  version: v138.0.0
+  title: Release Notes - v138.0.0
+  category: AP Core
+  breaking: false
+- date: '2026-06-23'
+  version: v137.0.0
+  title: Release Notes - v137.0.0
+  category: AP Core
+  breaking: false
+- date: '2026-06-09'
+  version: v136.0.0
+  title: Release Notes - v136.0.0
+  category: AP Core
+  breaking: false
+- date: '2026-05-26'
+  version: v135.0.0
+  title: Release Notes - v135.0.0
+  category: Accounts Payable (AP)
+  breaking: false
+- date: '2026-05-18'
+  title: Token Billing
+  category: Accounts Payable (AP)
+  breaking: false
+note: >-
+  Recent window only (2026-05-18 through 2026-08-24), captured 2026-08-26. v140.0.0 was not present
+  as a titled entry in the captured page window.
+gaps:
+- >-
+  The changelog covers the product UI, not the API. An API consumer has no dated record of contract
+  changes, so there is no way to tell when v2 shipped or whether v1 has changed.

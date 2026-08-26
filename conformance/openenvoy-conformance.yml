@@ -1,0 +1,98 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/openenvoy-openapi.json + postman/openenvoy-postman-collection.json + https://www.openenvoy.com/llms.txt
+note: >-
+  Assessed against the published contract, not against marketing claims. OpenEnvoy's llms.txt states
+  the platform supports "global compliance standards" for e-invoicing and complies with SOX and
+  GDPR, but the security page that would evidence this is behind a Cloudflare bot challenge for our
+  crawler and no trust center or certification listing was reachable, so no Compliance pointer is
+  emitted.
+standards:
+- id: openapi
+  conforms: false
+  evidence: >-
+    The provider publishes Swagger 2.0 (openapi/openenvoy-openapi.json, `swagger: "2.0"`), not
+    OpenAPI 3.x. It is a valid machine-readable contract but predates OpenAPI 3.0 (2017).
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityDefinition; authentication is a static client id plus bearer token.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404 on every host.
+- id: rfc9457
+  conforms: false
+  evidence: >-
+    Errors return application/json with proprietary keys (errorCode/errorMessage/key), not
+    application/problem+json. See errors/openenvoy-problem-types.yml.
+- id: rfc8594
+  conforms: false
+  evidence: No Sunset or Deprecation headers documented or observed.
+- id: rfc9116
+  conforms: false
+  evidence: /.well-known/security.txt returned 404 on all six hosts.
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key or equivalent replay-protection mechanism in the contract or docs.
+- id: pagination
+  conforms: false
+  evidence: No limit/offset/cursor parameters on any collection operation.
+- id: 'json:api'
+  conforms: false
+  evidence: Plain JSON resource representations; no JSON:API document structure.
+- id: rate-limit-headers
+  conforms: false
+  evidence: No RateLimit-* or X-RateLimit-* headers documented or observed.
+- id: https-only
+  conforms: false
+  evidence: >-
+    The published definition declares `schemes: ["http"]`. The deployment does serve HTTPS, but
+    backend.openenvoy.io returns no HSTS header (security/openenvoy-domain-security.yml).
+domain_standard:
+  market: accounts payable / e-invoicing / procure-to-pay
+  candidates_probed:
+  - id: peppol
+    conforms: unknown
+    evidence: >-
+      No PEPPOL participant identifier, BIS Billing 3.0 shape, UBL or AS4 surface appears anywhere
+      in the published contract. OpenEnvoy markets e-invoicing with "global compliance standards"
+      but names no standard on any page reachable to us.
+  - id: ubl
+    conforms: false
+    evidence: >-
+      The InvoiceInfo/LineItems schemas are a bespoke flat model (number, date, due_date,
+      payment_terms, amount_due, currency, seller, buyer, line_items) with no UBL element names,
+      namespaces or cbc/cac prefixes.
+  - id: 'edifact-invoic'
+    conforms: false
+    evidence: No EDIFACT message type or segment structure in the contract.
+  - id: 'x12-810'
+    conforms: false
+    evidence: >-
+      No X12 810 (Invoice) or 850 (Purchase Order) transaction-set shape in the contract, despite
+      the product ingesting EDI per its own platform page.
+  - id: 'iso-20022'
+    conforms: false
+    evidence: No ISO 20022 message identifiers in the payment_information object.
+  - id: 'factur-x / zugferd'
+    conforms: false
+    evidence: No hybrid PDF/XML profile declared on the document ingest endpoints.
+  result: none-declared
+  note: >-
+    REWARD-ONLY dimension, and OpenEnvoy earns nothing here — not because its market lacks a
+    standard, but because it has one (PEPPOL/UBL for e-invoicing, X12/EDIFACT for procure-to-pay)
+    and the contract declares none of it. The API accepts an invoice as an opaque uploaded FILE and
+    returns a proprietary extracted model, so a buyer who already speaks UBL or X12 gets no
+    standards-native path and needs a bespoke connector. This is a genuine, specific gap rather
+    than an absent-market exemption.
+compliance_claims:
+- claim: SOX and GDPR compliance, encrypted storage, access controls, audit logs
+  source: https://www.openenvoy.com/llms.txt (describing https://www.openenvoy.com/security)
+  verified: false
+  note: >-
+    Claim is taken from OpenEnvoy's own llms.txt description of its security page. The security page
+    itself returned HTTP 403 to our crawler (Cloudflare bot challenge), so the claim could not be
+    read at source and no certification (SOC 2, ISO 27001) was evidenced. Not scored as Compliance.
+- claim: multi-currency and global e-invoicing compliance standards
+  source: https://www.openenvoy.com/llms.txt
+  verified: false
+  note: No standard is named. Multi-currency IS evidenced in the contract (MatchingLineItems carries invoice_currency, matched_currency and exchange_rate).

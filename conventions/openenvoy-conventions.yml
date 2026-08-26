@@ -1,0 +1,172 @@
+generated: '2026-08-26'
+method: derived
+source: openapi/openenvoy-openapi.json + postman/openenvoy-postman-collection.json + https://apidocs.openenvoy.io/
+summary: >-
+  OpenEnvoy publishes a small, job-centric REST surface with a dual-header static credential, a
+  proprietary JSON error envelope and path-segment versioning. It documents no idempotency
+  mechanism, no pagination, no rate-limit headers and no request-id tracing. The write surface is
+  substantial (job creation, approval, status change, delete) and reversibility is only partially
+  documented.
+auth:
+  style: dual static header (X-CLIENT-ID + Authorization Bearer)
+  see: authentication/openenvoy-authentication.yml
+idempotency:
+  supported: false
+  grade: na
+  header: null
+  scope: null
+  retention: null
+  note: >-
+    No Idempotency-Key header, no client-supplied request token and no documented replay semantics
+    anywhere in the Swagger definition, the Postman collection or the docs prose. This matters more
+    than usual here: POST /jobs/create is a file-upload endpoint that mints a new job (invoice under
+    audit) on every call, so a retried request after a timeout creates a duplicate invoice job —
+    precisely the duplicate-payment failure mode the product exists to prevent. The three-step
+    create flow (initiate -> upload -> complete) does give a client a natural natural-key recovery
+    path: the initiate response returns a job_number the client can re-use rather than re-initiating.
+  mitigation: >-
+    Capture job_number from the initiate response and persist it before uploading. On an ambiguous
+    failure, GET /jobs/{jobNumber} to determine whether the job exists before retrying.
+pagination:
+  supported: false
+  style: null
+  note: >-
+    GET /users and GET /roles return unbounded collections with no limit/offset/cursor parameters
+    declared. POST /v2/jobs ("Get all jobs") is a search-shaped POST whose request body is not
+    described in the published Swagger definition, so whether it paginates cannot be determined
+    from the public contract.
+filtering_expansion:
+  supported: unknown
+  note: >-
+    POST /public/api/v2/jobs takes a JSON body for job search but the body schema is absent from the
+    published contract; filter fields are undocumented publicly.
+metadata:
+  supported: true
+  note: >-
+    The InvoiceInfo definition carries a `metadata` member, and line items are returned under
+    `line_items`. This is response-side extracted data, not a client-writable custom-metadata bag.
+request_tracing:
+  request_id_header: null
+  supported: false
+  note: No request-id, correlation-id or trace header is documented or declared.
+versioning:
+  style: path-segment
+  current: v2
+  versions:
+  - version: v1
+    base: https://backend.openenvoy.io/public/api/v1
+    status: active
+    surface: jobs (create/upload/complete/get/document-version), users, roles
+  - version: v2
+    base: https://backend.openenvoy.io/public/api/v2
+    status: active
+    surface: jobs (get, search, status change, approve, rematch, delete)
+  note: >-
+    v1 and v2 are complementary rather than successive — v2 does not replace v1, it adds a job
+    lifecycle surface while job creation remains v1-only. A client needs both base URLs.
+  see: lifecycle/openenvoy-lifecycle.yml
+error_envelope:
+  format: proprietary-json
+  rfc9457: false
+  see: errors/openenvoy-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  documented: false
+  see: rate-limits/openenvoy-rate-limits.yml
+content_types:
+  consumes:
+  - application/json
+  - multipart/form-data
+  produces:
+  - application/json
+  note: >-
+    Document ingest (job create, upload, document version update) is multipart/form-data file
+    upload; everything else is JSON.
+transport:
+  https_supported: true
+  note: >-
+    The published Swagger 2.0 definition declares `schemes: ["http"]` — plaintext HTTP only. The
+    host in fact serves HTTPS and the Postman collection uses https:// throughout, so this is a
+    defect in the definition rather than the deployment, but a generated client that honours the
+    declared scheme will attempt an unencrypted call carrying a bearer token. backend.openenvoy.io
+    also returns no HSTS header (see security/openenvoy-domain-security.yml).
+dry_run_mode:
+  supported: false
+  grade: na
+  note: No preview, validate-only, simulate or dry-run parameter is documented on any operation.
+reversibility:
+  grade: documented
+  assessment: >-
+    OpenEnvoy publishes real reversal operations for the job lifecycle, but states no time window
+    for any of them, so this grades `documented` (a reversal path exists) rather than `verified`
+    (a reversal path with a stated window). No window is asserted here because the public docs do
+    not state one.
+  write_surface:
+  - operation: POST /public/api/v1/jobs/create
+    operation_ref: 'postman: Jobs / Initiate job creation'
+    effect: Creates a new job (an invoice under audit).
+    reversal:
+      exists: true
+      operation: PATCH /public/api/v2/jobs/{jobNumber}/delete
+      operation_ref: 'postman: JobsV2 / Delete a job'
+      window: null
+      window_documented: false
+      note: >-
+        A delete operation exists on the v2 surface. Whether it is a soft delete (the Job schema
+        carries an `active` boolean, which suggests soft-delete semantics) or a hard delete, and
+        whether it can be undone, is not stated in the public documentation.
+  - operation: POST /public/api/v2/jobs/{jobNumber}/approve
+    operation_ref: 'postman: JobsV2 / Approve a job'
+    effect: Approves a job, advancing it toward payment.
+    reversal:
+      exists: partial
+      operation: POST /public/api/v2/jobs/{jobNumber}/status
+      operation_ref: 'postman: JobsV2 / Change a job''s status'
+      window: null
+      window_documented: false
+      note: >-
+        A general status-change operation exists and is the apparent path back from an approval,
+        but the permitted status transitions are not published, so it cannot be confirmed that
+        approve is reversible via status change. Treat approval as effectively irreversible until
+        OpenEnvoy documents the transition matrix.
+  - operation: POST /public/api/v2/jobs/{jobNumber}/rematch
+    operation_ref: 'postman: JobsV2 / Rematch a job'
+    effect: Re-runs the matching engine against the job's documents.
+    reversal:
+      exists: true
+      operation: POST /public/api/v2/jobs/{jobNumber}/rematch
+      window: null
+      window_documented: false
+      note: Rematch is naturally re-runnable and recomputes rather than destroys; it is self-reversing.
+  - operation: PUT /public/api/v1/jobs/{jobNumber}/job_documents/{documentId}
+    operation_ref: 'openapi: PUT /jobs/{jobNumber}/job_documents/{documentId}'
+    effect: Uploads a new version of an existing job document.
+    reversal:
+      exists: true
+      operation: null
+      window: null
+      window_documented: false
+      note: >-
+        Non-destructive by design — the JobDocumentVersion schema carries `version_number`, so
+        prior versions are retained rather than overwritten. No operation to revert to a prior
+        version is published, and no retention period is stated.
+  - operation: PATCH /public/api/v1/users/{userId}
+    operation_ref: 'postman: Users / update user'
+    effect: Mutates a user record.
+    reversal:
+      exists: false
+      window: null
+      window_documented: false
+      note: No undo, no audit-restore and no prior-value retrieval is published for user mutations.
+  gaps:
+  - No reversal window is stated for any operation anywhere in the public documentation.
+  - The job status transition matrix is unpublished, so an agent cannot compute whether an action is reversible before taking it.
+  - >-
+    The highest-consequence action in the product (approving an invoice for payment) has no
+    documented, guaranteed reversal path.
+cross_links:
+  errors: errors/openenvoy-problem-types.yml
+  lifecycle: lifecycle/openenvoy-lifecycle.yml
+  authentication: authentication/openenvoy-authentication.yml
+  rate_limits: rate-limits/openenvoy-rate-limits.yml
+  data_model: data-model/openenvoy-data-model.yml

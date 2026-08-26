@@ -1,0 +1,55 @@
+generated: '2026-08-26'
+method: searched
+source: https://changelog.openenvoy.io/ + https://status.openenvoy.com/ + https://apidocs.openenvoy.io/
+versioning:
+  style: path-segment
+  current: v2
+  versions:
+  - version: v1
+    base: https://backend.openenvoy.io/public/api/v1
+    status: active
+  - version: v2
+    base: https://backend.openenvoy.io/public/api/v2
+    status: active
+  note: >-
+    v1 and v2 coexist and are complementary, not successive. Job creation and user administration
+    exist only on v1; job search, status change, approve, rematch and delete exist only on v2. No
+    statement of v1 end-of-life has been published.
+deprecation_policy:
+  published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No deprecation policy, no notice period and no Sunset/Deprecation response headers are
+    documented or observed. No operation in the published contract is marked deprecated.
+deprecated_operations: []
+status_page:
+  url: https://status.openenvoy.com/
+  http_status: 200
+  provider: third-party hosted status page
+  features:
+  - uptime history (24h / 7d / 30d / 90d)
+  - incident history
+  - email subscription to updates
+  observed: >-
+    Probed 2026-08-26: page live, no incidents in the trailing 7 days. The page does not expose a
+    machine-readable status endpoint on a path we could discover.
+  method: probed
+changelog:
+  url: https://changelog.openenvoy.io/
+  http_status: 200
+  see: changelog/openenvoy-changelog.yml
+sla:
+  published: false
+  note: No public SLA or uptime commitment was found on the reachable surface.
+support:
+  portal: https://support.openenvoy.com/
+  contact: support@openenvoy.com
+  note: Knowledge base is public; the customer support portal (portal.usepylon.com/openenvoy) is authenticated.
+gaps:
+- No deprecation policy or sunset signalling of any kind.
+- No published SLA.
+- >-
+  The v1/v2 split is undocumented on the public surface — a consumer must read the Postman
+  collection folder structure to learn that job creation is v1-only.
