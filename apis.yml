@@ -28,26 +28,16 @@ tags:
 - ERP Integration
 - Spend Management
 apis:
-- aid: openenvoy-api
-  name: OpenEnvoy API
-  description: 'The OpenEnvoy public REST API. Jobs are the core object: a job is an invoice under
-    audit, created by uploading a provider invoice, optionally supplemented with baseline documents
-    (purchase orders, contracts, rate sheets, receipts), then completed so OpenEnvoy can run its
-    matching engine and return line-item level matched amounts. The v1 surface covers job creation,
-    document upload and versioning, job retrieval, and user/role administration; the v2 surface adds
-    job search, status changes, approval, rematch and delete. Authentication is a per-customer
-    client id plus a bearer token issued by OpenEnvoy customer success.'
+- aid: openenvoy:openenvoy-job-api
+  name: OpenEnvoy Job API
+  description: Jobs in the system
   humanURL: https://apidocs.openenvoy.io/
   baseURL: https://backend.openenvoy.io/public/api/v1
   tags:
-  - Jobs
-  - Invoices
-  - Documents
-  - Users
-  - Matching
+  - Job
   properties:
   - type: OpenAPI
-    url: openapi/openenvoy-openapi.json
+    url: openapi/openenvoy-job-api-openapi.yml
   - type: Postman
     url: postman/openenvoy-postman-collection.json
   - type: Documentation
@@ -62,20 +52,20 @@ apis:
     url: conventions/openenvoy-conventions.yml
   - type: DataModel
     url: data-model/openenvoy-data-model.yml
-  - type: Overlay
-    url: overlays/openenvoy-openapi-overlay.yaml
   - type: RateLimits
     url: rate-limits/openenvoy-rate-limits.yml
   - type: Conformance
     url: conformance/openenvoy-conformance.yml
-  - type: AgentSkill
-    url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/openenvoy-openapi-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
 - type: DomainSecurity
   url: security/openenvoy-domain-security.yml
 - type: Website
