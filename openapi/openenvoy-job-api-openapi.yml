@@ -1,0 +1,591 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: OpenEnvoy Job API
+  description: API docs for Open Envoy
+  license:
+    name: Copyright (c) 2020-2021, Open Envoy, Inc.
+servers:
+- url: http://backend.openenvoy.io/public/api/v1
+security:
+- jwt: []
+tags:
+- name: Job
+  description: Jobs in the system
+paths:
+  /jobs/{jobNumber}:
+    get:
+      description: Get Job Detail
+      tags:
+      - Job
+      parameters:
+      - required: true
+        in: path
+        name: jobNumber
+        description: Job Number
+        example: OE0001
+        schema:
+          type: string
+          pattern: ^OE000[1-9][0-9]*$
+      - required: true
+        in: header
+        name: X-CLIENT-ID
+        description: Client ID
+        example: 5f09d439-64b0-4a87-8019-dd9c60a69f82
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Job object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+  /jobs/create:
+    post:
+      description: Create a new Job
+      tags:
+      - Job
+      parameters:
+      - required: true
+        in: header
+        name: X-CLIENT-ID
+        description: Client ID
+        example: 5f09d439-64b0-4a87-8019-dd9c60a69f82
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Job created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                provider_name:
+                  type: string
+                  description: Name of the provider
+                Invoice:
+                  type: string
+                  description: Invoice document
+                  format: binary
+              required:
+              - provider_name
+              - Invoice
+  /jobs/{jobNumber}/upload:
+    post:
+      description: Uploads job document to an existing Job
+      tags:
+      - Job
+      parameters:
+      - required: true
+        in: path
+        name: jobNumber
+        description: Job Number
+        example: OE0001
+        schema:
+          type: string
+          pattern: ^OE000[1-9][0-9]*$
+      - required: true
+        in: header
+        name: X-CLIENT-ID
+        description: Client ID
+        example: 5f09d439-64b0-4a87-8019-dd9c60a69f82
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Job updated with new baseline document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDocument'
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                Baseline:
+                  type: string
+                  description: Baseline document
+                  format: binary
+              required:
+              - Baseline
+  /jobs/{jobNumber}/complete:
+    post:
+      description: Completes job cretion process
+      tags:
+      - Job
+      parameters:
+      - required: true
+        in: path
+        name: jobNumber
+        description: Job Number
+        example: OE0001
+        schema:
+          type: string
+          pattern: ^OE000[1-9][0-9]*$
+      - required: true
+        in: header
+        name: X-CLIENT-ID
+        description: Client ID
+        example: 5f09d439-64b0-4a87-8019-dd9c60a69f82
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Job creation is completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          description: Bad Request
+  /jobs/{jobNumber}/job_documents/{documentId}:
+    put:
+      description: Updates a new version to existing job document
+      tags:
+      - Job
+      parameters:
+      - required: true
+        in: path
+        name: jobNumber
+        description: Job Number
+        example: OE0001
+        schema:
+          type: string
+          pattern: ^OE000[1-9][0-9]*$
+      - required: true
+        in: path
+        name: documentId
+        description: Job Document unique ID
+        example: 2da0e29c-a173-4ada-942c-b8036b3d3a3b
+        schema:
+          type: string
+          format: uuid
+      - required: true
+        in: header
+        name: X-CLIENT-ID
+        description: Client ID
+        example: 5f09d439-64b0-4a87-8019-dd9c60a69f82
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Job document updated with new version
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDocumentVersion'
+        '400':
+          description: Bad Request
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                document:
+                  type: string
+                  description: Invoice/Baseline document
+                  format: binary
+              required:
+              - document
+components:
+  schemas:
+    JobDocumentVersion:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Job Version id
+          format: uuid
+          example: 1d24d439-64b0-4a87-8019-dd9c60a69f82
+        job_document_id:
+          type: string
+          description: Job Document id
+          format: uuid
+          example: 5b41d439-64b0-4a87-8019-dd9c60a69f82
+        filename:
+          type: string
+          description: Document filename
+          example: Invoice.docx
+        storage_url:
+          type: string
+          description: Storage url of file
+          example: s3://open-envoy-dev-job-documents/069d9c24-3771-453f-a798-8ae8b632b4ae/b52ee8e2-a232-4cc0-b646-60ed428093a7.PDF
+        update_by:
+          type: string
+          description: user id of user who updated the document
+          format: uuid
+          example: 3a89d439-24b0-4a87-8019-dd9c60a69f82
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        version_number:
+          type: integer
+          description: Version number of document
+          example: 1
+        matching_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchingLineItems'
+          example:
+          - charge_type: HANDLING FEES
+            document: Invoice
+            exchange_rate: 1
+            id: 7a4540bc-10eb-48c4-a3a0-02e738afa95a
+            invoice_amount: 40391
+            invoice_before_tax: 0
+            invoice_currency: USD
+            invoice_price: 197
+            invoice_quantity: 30
+            invoice_tax: 30
+            invoice_unit: BOL
+            matched_amount: 40391
+            matched_currency: USD
+            matched_price: 197
+            matched_quantity: 30
+            matched_unit: BOL
+    MatchingLineItems:
+      type: object
+      properties:
+        charge_type:
+          type: string
+          description: Charge description
+          example: HANDLING FEES
+        document:
+          type: string
+          example: Invoice
+          description: Document reference
+        exchange_rate:
+          type: integer
+          example: '1'
+          description: Exchange rate
+        id:
+          type: string
+          format: uuid
+          description: Job document version id
+          example: 7a4540bc-10eb-48c4-a3a0-02e738afa95a
+        invoice_amount:
+          type: number
+          description: Amount in invoice document
+          example: 40391
+        invoice_before_tax:
+          type: number
+          description: Amount before tax
+          example: 0
+        invoice_currency:
+          type: string
+          description: Currency
+          example: USD
+        invoice_price:
+          type: number
+          description: Price in invoice document
+          example: '197'
+        invoice_quantity:
+          type: number
+          description: Quanity in invoice document
+          example: 30
+        invoice_tax:
+          type: number
+          description: Quanity in invoice document
+          example: 30
+        invoice_unit:
+          type: string
+          description: Unit in invoice document
+          enum:
+          - BOL
+          - CNT
+          example: BOL
+        matched_amount:
+          type: number
+          description: Amount in baseline document
+          example: 40391
+        matched_currency:
+          type: string
+          description: Currency in baseline document
+          example: USD
+        matched_price:
+          type: number
+          description: Price in baseline document
+          example: '197'
+        matched_quantity:
+          type: number
+          description: Quanity in baseline document
+          example: 30
+        matched_unit:
+          type: string
+          description: Unit in baseline document
+          enum:
+          - BOL
+          - CNT
+          example: BOL
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Job ID
+          format: uuid
+          example: 6b09d439-64b0-4a87-8019-dd9c60a69f82
+        status:
+          type: string
+          enum:
+          - Matching
+          - Conflict
+          - Dispute
+          - Matched
+          - ForApproval
+          - Completed
+          - Approved
+          - Verifying
+          description: Status
+          example: Matching
+        active:
+          type: boolean
+          description: Active status
+        amount:
+          type: integer
+          description: Amount
+          example: 2500
+        matched_amount:
+          type: integer
+          description: Matched amount
+          example: 0
+        matched_amount_status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - Correct
+          - Overcharged
+          - Undercharged
+          description: Job matched amount
+          example: null
+        note:
+          type:
+          - string
+          - 'null'
+          description: Note
+          example: null
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        job_number:
+          type: string
+          description: Job number
+          example: OE0001
+        provider:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Provider ID
+              format: uuid
+              example: 9z09d439-24b0-4a87-8019-dd9c60a69f82
+            name:
+              type: string
+              description: Provider name
+              example: A Clarke & Co (Smethwick) Ltd
+        job_documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobDocument'
+        invoice_info:
+          type: object
+          $ref: '#/components/schemas/InvoiceInfo'
+    LineItems:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Charge description
+          example: HANDLING FEES
+        quantity:
+          type: integer
+          description: Quantity
+          example: 1
+        unit_price:
+          type: number
+          description: Unit price
+          example: 100000
+        currency:
+          type: string
+          description: Currency
+          example: THB
+        total:
+          type: integer
+          description: Total
+          example: 100000
+    InvoiceInfo:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Invoice number
+          example: '5457852'
+        date:
+          type: string
+          format: date-time
+          description: Invoice date
+          example: '2019-01-03T00:00:00.000Z'
+        due_date:
+          type: string
+          description: Invoice due date
+          format: date-time
+          example: '2019-03-27T00:00:00.000Z'
+        payment_terms:
+          type: string
+          description: Invoice payment terms
+          example: 55 days
+        amount_due:
+          type:
+          - number
+          - 'null'
+          description: Invoice amount due
+          example: 2500
+        currency:
+          type:
+          - string
+          - 'null'
+          description: Invoice currency
+          example: USD
+        seller:
+          type:
+          - object
+          - 'null'
+          description: Seller information
+          example:
+            name: Orin Fritsch
+            address: 82465 Franecki Run Apt. 562 Sycamore, SC 29846
+            email: jast.adolf@yahoo.com
+            phone_no: 952.829.6350 x2060
+        buyer:
+          type:
+          - object
+          - 'null'
+          description: Buyer information
+          example:
+            name: Ms. Madelynn Lemke Sr.
+            address: '3508 Adrianna Valleys Suite 774 Mount Vernon, ME 04352 '
+            email: rbreitenberg@grimes.com
+            phone_no: 1-571-945-5499 x5233
+        payment_information:
+          type:
+          - object
+          - 'null'
+          description: Payment information
+          example:
+            bank_name: DISTRIBUTION ACCT-REFCO
+            account_name: Cruz Fay
+            bank_address: 61047 Madalyn Rest Pleasantville, NJ 08232
+            routing_number: '11111111'
+            account_number: 1111-1111
+            swift_code: BOFAUS3N
+            payment_link: https://payment.link.com
+        line_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItems'
+          description: Invoice line items
+        metadata:
+          type: object
+          description: Job medata data
+          example:
+            Business Unit: AIR EXPORT
+            Account No: (USD) 100-087576-056 (EUR)100-087576-061
+            Nb of Parcels: 6
+            Chargeable Weight: 106.000 Kg
+            Gross Weight: 106.000 Kg
+            Place of Loading: PUDONG
+            DUE DATE: '2019-03-27T00:00:00.000Z'
+            Job File: CNSHA/51/558196
+            INVOICE DATE: '2019-01-03T00:00:00.000Z'
+            MAWB/OBL: 112-99186323
+            ETD: '2018-12-30T00:00:00.000Z'
+            Goods Description: OPTICAL LENSES
+            Netting Code: 12580000000
+            Vol (cbm): 0.446
+            Vessel / Flight: MU245
+            HAWB/HBL: CNSHA558196
+            Place of Discharge: DUBAI
+            SWIFT Code: HSBCCNSH
+            Tracking No: CNSHA/51/558196
+            Operation: Kevin Wu
+            Code: 85800
+            INVOICE NO: 5457852
+            Salesman: SADOUKI - CRM Sale
+            TERMS: 55 Days
+            Consignee: OPTICAL SUPPLIES MIDDLE EAST FZE
+            ETA: '2019-01-01T00:00:00.000Z'
+            'Tel: +86': '21 3395 0600 Fax: +86 21 6886 9188'
+            Shipper: JIANGSU CREASKY OPTICAL CO.,LTD
+    JobDocument:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Job Document Id
+          example: 8h09d439-64b0-4a87-8019-dd9c60a69f82
+        job_id:
+          type: string
+          format: uuid
+          description: Job Id
+          example: 1b09d439-64b0-4a87-8019-dd9c60a69f23
+        document_type:
+          type: string
+          enum:
+          - Invoice
+          - Baseline
+          example: Invoice
+          'description:': Document type
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        jobdocumentversions:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobDocumentVersion'
+  securitySchemes:
+    jwt:
+      in: header
+      type: apiKey
+      name: Authorization
