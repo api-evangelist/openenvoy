@@ -1,0 +1,20 @@
+{
+  "provider": "openenvoy",
+  "sources": [
+    "_original/openenvoy-openapi.json"
+  ],
+  "outputs": [
+    "openenvoy-job-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "openenvoy-openapi.json: upgraded swagger 2.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "openenvoy-job-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

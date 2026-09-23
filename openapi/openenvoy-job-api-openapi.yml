@@ -42,6 +42,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Job'
+      summary: Get jobs by job number
+      x-summary-source: derived
+      operationId: getJobsByJobNumber
+      x-operation-id-source: derived
   /jobs/create:
     post:
       description: Create a new Job
@@ -81,6 +85,10 @@ paths:
               required:
               - provider_name
               - Invoice
+      summary: Create jobs create
+      x-summary-source: derived
+      operationId: postJobsCreate
+      x-operation-id-source: derived
   /jobs/{jobNumber}/upload:
     post:
       description: Uploads job document to an existing Job
@@ -124,6 +132,10 @@ paths:
                   format: binary
               required:
               - Baseline
+      summary: Create jobs by job number upload
+      x-summary-source: derived
+      operationId: postJobsByJobNumberUpload
+      x-operation-id-source: derived
   /jobs/{jobNumber}/complete:
     post:
       description: Completes job cretion process
@@ -155,6 +167,10 @@ paths:
                 $ref: '#/components/schemas/Job'
         '400':
           description: Bad Request
+      summary: Create jobs by job number complete
+      x-summary-source: derived
+      operationId: postJobsByJobNumberComplete
+      x-operation-id-source: derived
   /jobs/{jobNumber}/job_documents/{documentId}:
     put:
       description: Updates a new version to existing job document
@@ -206,8 +222,127 @@ paths:
                   format: binary
               required:
               - document
+      summary: Replace jobs by job number job documents by document id
+      x-summary-source: derived
+      operationId: putJobsByJobNumberJobDocumentsByDocumentId
+      x-operation-id-source: derived
 components:
   schemas:
+    JobDocument:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Job Document Id
+          example: 8h09d439-64b0-4a87-8019-dd9c60a69f82
+        job_id:
+          type: string
+          format: uuid
+          description: Job Id
+          example: 1b09d439-64b0-4a87-8019-dd9c60a69f23
+        document_type:
+          type: string
+          enum:
+          - Invoice
+          - Baseline
+          example: Invoice
+          'description:': Document type
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        jobdocumentversions:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobDocumentVersion'
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Job ID
+          format: uuid
+          example: 6b09d439-64b0-4a87-8019-dd9c60a69f82
+        status:
+          type: string
+          enum:
+          - Matching
+          - Conflict
+          - Dispute
+          - Matched
+          - ForApproval
+          - Completed
+          - Approved
+          - Verifying
+          description: Status
+          example: Matching
+        active:
+          type: boolean
+          description: Active status
+        amount:
+          type: integer
+          description: Amount
+          example: 2500
+        matched_amount:
+          type: integer
+          description: Matched amount
+          example: 0
+        matched_amount_status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - Correct
+          - Overcharged
+          - Undercharged
+          description: Job matched amount
+          example: null
+        note:
+          type:
+          - string
+          - 'null'
+          description: Note
+          example: null
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        job_number:
+          type: string
+          description: Job number
+          example: OE0001
+        provider:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Provider ID
+              format: uuid
+              example: 9z09d439-24b0-4a87-8019-dd9c60a69f82
+            name:
+              type: string
+              description: Provider name
+              example: A Clarke & Co (Smethwick) Ltd
+        job_documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobDocument'
+        invoice_info:
+          type: object
+          $ref: '#/components/schemas/InvoiceInfo'
     JobDocumentVersion:
       type: object
       properties:
@@ -343,87 +478,6 @@ components:
           - BOL
           - CNT
           example: BOL
-    Job:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Job ID
-          format: uuid
-          example: 6b09d439-64b0-4a87-8019-dd9c60a69f82
-        status:
-          type: string
-          enum:
-          - Matching
-          - Conflict
-          - Dispute
-          - Matched
-          - ForApproval
-          - Completed
-          - Approved
-          - Verifying
-          description: Status
-          example: Matching
-        active:
-          type: boolean
-          description: Active status
-        amount:
-          type: integer
-          description: Amount
-          example: 2500
-        matched_amount:
-          type: integer
-          description: Matched amount
-          example: 0
-        matched_amount_status:
-          type:
-          - string
-          - 'null'
-          enum:
-          - Correct
-          - Overcharged
-          - Undercharged
-          description: Job matched amount
-          example: null
-        note:
-          type:
-          - string
-          - 'null'
-          description: Note
-          example: null
-        created_at:
-          type: string
-          format: date-time
-          description: Created at UTC timestamp
-          example: '2021-04-21T03:04:24.957Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Last updated UTC timestamp
-          example: '2021-04-22T03:04:24.957Z'
-        job_number:
-          type: string
-          description: Job number
-          example: OE0001
-        provider:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Provider ID
-              format: uuid
-              example: 9z09d439-24b0-4a87-8019-dd9c60a69f82
-            name:
-              type: string
-              description: Provider name
-              example: A Clarke & Co (Smethwick) Ltd
-        job_documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/JobDocument'
-        invoice_info:
-          type: object
-          $ref: '#/components/schemas/InvoiceInfo'
     LineItems:
       type: object
       properties:
@@ -550,40 +604,6 @@ components:
             ETA: '2019-01-01T00:00:00.000Z'
             'Tel: +86': '21 3395 0600 Fax: +86 21 6886 9188'
             Shipper: JIANGSU CREASKY OPTICAL CO.,LTD
-    JobDocument:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Job Document Id
-          example: 8h09d439-64b0-4a87-8019-dd9c60a69f82
-        job_id:
-          type: string
-          format: uuid
-          description: Job Id
-          example: 1b09d439-64b0-4a87-8019-dd9c60a69f23
-        document_type:
-          type: string
-          enum:
-          - Invoice
-          - Baseline
-          example: Invoice
-          'description:': Document type
-        created_at:
-          type: string
-          format: date-time
-          description: Created at UTC timestamp
-          example: '2021-04-21T03:04:24.957Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Last updated UTC timestamp
-          example: '2021-04-22T03:04:24.957Z'
-        jobdocumentversions:
-          type: array
-          items:
-            $ref: '#/components/schemas/JobDocumentVersion'
   securitySchemes:
     jwt:
       in: header
