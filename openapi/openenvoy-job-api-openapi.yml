@@ -309,101 +309,6 @@ components:
         invoice_info:
           type: object
           $ref: '#/components/schemas/InvoiceInfo'
-    JobDocument:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Job Document Id
-          example: 8h09d439-64b0-4a87-8019-dd9c60a69f82
-        job_id:
-          type: string
-          format: uuid
-          description: Job Id
-          example: 1b09d439-64b0-4a87-8019-dd9c60a69f23
-        document_type:
-          type: string
-          enum:
-          - Invoice
-          - Baseline
-          example: Invoice
-          'description:': Document type
-        created_at:
-          type: string
-          format: date-time
-          description: Created at UTC timestamp
-          example: '2021-04-21T03:04:24.957Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Last updated UTC timestamp
-          example: '2021-04-22T03:04:24.957Z'
-        jobdocumentversions:
-          type: array
-          items:
-            $ref: '#/components/schemas/JobDocumentVersion'
-    JobDocumentVersion:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Job Version id
-          format: uuid
-          example: 1d24d439-64b0-4a87-8019-dd9c60a69f82
-        job_document_id:
-          type: string
-          description: Job Document id
-          format: uuid
-          example: 5b41d439-64b0-4a87-8019-dd9c60a69f82
-        filename:
-          type: string
-          description: Document filename
-          example: Invoice.docx
-        storage_url:
-          type: string
-          description: Storage url of file
-          example: s3://open-envoy-dev-job-documents/069d9c24-3771-453f-a798-8ae8b632b4ae/b52ee8e2-a232-4cc0-b646-60ed428093a7.PDF
-        update_by:
-          type: string
-          description: user id of user who updated the document
-          format: uuid
-          example: 3a89d439-24b0-4a87-8019-dd9c60a69f82
-        created_at:
-          type: string
-          format: date-time
-          description: Created at UTC timestamp
-          example: '2021-04-21T03:04:24.957Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Last updated UTC timestamp
-          example: '2021-04-22T03:04:24.957Z'
-        version_number:
-          type: integer
-          description: Version number of document
-          example: 1
-        matching_info:
-          type: array
-          items:
-            $ref: '#/components/schemas/MatchingLineItems'
-          example:
-          - charge_type: HANDLING FEES
-            document: Invoice
-            exchange_rate: 1
-            id: 7a4540bc-10eb-48c4-a3a0-02e738afa95a
-            invoice_amount: 40391
-            invoice_before_tax: 0
-            invoice_currency: USD
-            invoice_price: 197
-            invoice_quantity: 30
-            invoice_tax: 30
-            invoice_unit: BOL
-            matched_amount: 40391
-            matched_currency: USD
-            matched_price: 197
-            matched_quantity: 30
-            matched_unit: BOL
     InvoiceInfo:
       type: object
       properties:
@@ -530,6 +435,101 @@ components:
           type: integer
           description: Total
           example: 100000
+    JobDocument:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Job Document Id
+          example: 8h09d439-64b0-4a87-8019-dd9c60a69f82
+        job_id:
+          type: string
+          format: uuid
+          description: Job Id
+          example: 1b09d439-64b0-4a87-8019-dd9c60a69f23
+        document_type:
+          type: string
+          enum:
+          - Invoice
+          - Baseline
+          example: Invoice
+          'description:': Document type
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        jobdocumentversions:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobDocumentVersion'
+    JobDocumentVersion:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Job Version id
+          format: uuid
+          example: 1d24d439-64b0-4a87-8019-dd9c60a69f82
+        job_document_id:
+          type: string
+          description: Job Document id
+          format: uuid
+          example: 5b41d439-64b0-4a87-8019-dd9c60a69f82
+        filename:
+          type: string
+          description: Document filename
+          example: Invoice.docx
+        storage_url:
+          type: string
+          description: Storage url of file
+          example: s3://open-envoy-dev-job-documents/069d9c24-3771-453f-a798-8ae8b632b4ae/b52ee8e2-a232-4cc0-b646-60ed428093a7.PDF
+        update_by:
+          type: string
+          description: user id of user who updated the document
+          format: uuid
+          example: 3a89d439-24b0-4a87-8019-dd9c60a69f82
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        version_number:
+          type: integer
+          description: Version number of document
+          example: 1
+        matching_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchingLineItems'
+          example:
+          - charge_type: HANDLING FEES
+            document: Invoice
+            exchange_rate: 1
+            id: 7a4540bc-10eb-48c4-a3a0-02e738afa95a
+            invoice_amount: 40391
+            invoice_before_tax: 0
+            invoice_currency: USD
+            invoice_price: 197
+            invoice_quantity: 30
+            invoice_tax: 30
+            invoice_unit: BOL
+            matched_amount: 40391
+            matched_currency: USD
+            matched_price: 197
+            matched_quantity: 30
+            matched_unit: BOL
     MatchingLineItems:
       type: object
       properties:
