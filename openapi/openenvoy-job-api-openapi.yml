@@ -228,6 +228,218 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    MatchingLineItems:
+      type: object
+      properties:
+        charge_type:
+          type: string
+          description: Charge description
+          example: HANDLING FEES
+        document:
+          type: string
+          example: Invoice
+          description: Document reference
+        exchange_rate:
+          type: integer
+          example: '1'
+          description: Exchange rate
+        id:
+          type: string
+          format: uuid
+          description: Job document version id
+          example: 7a4540bc-10eb-48c4-a3a0-02e738afa95a
+        invoice_amount:
+          type: number
+          description: Amount in invoice document
+          example: 40391
+        invoice_before_tax:
+          type: number
+          description: Amount before tax
+          example: 0
+        invoice_currency:
+          type: string
+          description: Currency
+          example: USD
+        invoice_price:
+          type: number
+          description: Price in invoice document
+          example: '197'
+        invoice_quantity:
+          type: number
+          description: Quanity in invoice document
+          example: 30
+        invoice_tax:
+          type: number
+          description: Quanity in invoice document
+          example: 30
+        invoice_unit:
+          type: string
+          description: Unit in invoice document
+          enum:
+          - BOL
+          - CNT
+          example: BOL
+        matched_amount:
+          type: number
+          description: Amount in baseline document
+          example: 40391
+        matched_currency:
+          type: string
+          description: Currency in baseline document
+          example: USD
+        matched_price:
+          type: number
+          description: Price in baseline document
+          example: '197'
+        matched_quantity:
+          type: number
+          description: Quanity in baseline document
+          example: 30
+        matched_unit:
+          type: string
+          description: Unit in baseline document
+          enum:
+          - BOL
+          - CNT
+          example: BOL
+    JobDocument:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Job Document Id
+          example: 8h09d439-64b0-4a87-8019-dd9c60a69f82
+        job_id:
+          type: string
+          format: uuid
+          description: Job Id
+          example: 1b09d439-64b0-4a87-8019-dd9c60a69f23
+        document_type:
+          type: string
+          enum:
+          - Invoice
+          - Baseline
+          example: Invoice
+          'description:': Document type
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        jobdocumentversions:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobDocumentVersion'
+    LineItems:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Charge description
+          example: HANDLING FEES
+        quantity:
+          type: integer
+          description: Quantity
+          example: 1
+        unit_price:
+          type: number
+          description: Unit price
+          example: 100000
+        currency:
+          type: string
+          description: Currency
+          example: THB
+        total:
+          type: integer
+          description: Total
+          example: 100000
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Job ID
+          format: uuid
+          example: 6b09d439-64b0-4a87-8019-dd9c60a69f82
+        status:
+          type: string
+          enum:
+          - Matching
+          - Conflict
+          - Dispute
+          - Matched
+          - ForApproval
+          - Completed
+          - Approved
+          - Verifying
+          description: Status
+          example: Matching
+        active:
+          type: boolean
+          description: Active status
+        amount:
+          type: integer
+          description: Amount
+          example: 2500
+        matched_amount:
+          type: integer
+          description: Matched amount
+          example: 0
+        matched_amount_status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - Correct
+          - Overcharged
+          - Undercharged
+          description: Job matched amount
+          example: null
+        note:
+          type:
+          - string
+          - 'null'
+          description: Note
+          example: null
+        created_at:
+          type: string
+          format: date-time
+          description: Created at UTC timestamp
+          example: '2021-04-21T03:04:24.957Z'
+        updated_at:
+          type: string
+          format: date-time
+          description: Last updated UTC timestamp
+          example: '2021-04-22T03:04:24.957Z'
+        job_number:
+          type: string
+          description: Job number
+          example: OE0001
+        provider:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Provider ID
+              format: uuid
+              example: 9z09d439-24b0-4a87-8019-dd9c60a69f82
+            name:
+              type: string
+              description: Provider name
+              example: A Clarke & Co (Smethwick) Ltd
+        job_documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobDocument'
+        invoice_info:
+          type: object
+          $ref: '#/components/schemas/InvoiceInfo'
     InvoiceInfo:
       type: object
       properties:
@@ -392,218 +604,6 @@ components:
             matched_price: 197
             matched_quantity: 30
             matched_unit: BOL
-    JobDocument:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Job Document Id
-          example: 8h09d439-64b0-4a87-8019-dd9c60a69f82
-        job_id:
-          type: string
-          format: uuid
-          description: Job Id
-          example: 1b09d439-64b0-4a87-8019-dd9c60a69f23
-        document_type:
-          type: string
-          enum:
-          - Invoice
-          - Baseline
-          example: Invoice
-          'description:': Document type
-        created_at:
-          type: string
-          format: date-time
-          description: Created at UTC timestamp
-          example: '2021-04-21T03:04:24.957Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Last updated UTC timestamp
-          example: '2021-04-22T03:04:24.957Z'
-        jobdocumentversions:
-          type: array
-          items:
-            $ref: '#/components/schemas/JobDocumentVersion'
-    Job:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Job ID
-          format: uuid
-          example: 6b09d439-64b0-4a87-8019-dd9c60a69f82
-        status:
-          type: string
-          enum:
-          - Matching
-          - Conflict
-          - Dispute
-          - Matched
-          - ForApproval
-          - Completed
-          - Approved
-          - Verifying
-          description: Status
-          example: Matching
-        active:
-          type: boolean
-          description: Active status
-        amount:
-          type: integer
-          description: Amount
-          example: 2500
-        matched_amount:
-          type: integer
-          description: Matched amount
-          example: 0
-        matched_amount_status:
-          type:
-          - string
-          - 'null'
-          enum:
-          - Correct
-          - Overcharged
-          - Undercharged
-          description: Job matched amount
-          example: null
-        note:
-          type:
-          - string
-          - 'null'
-          description: Note
-          example: null
-        created_at:
-          type: string
-          format: date-time
-          description: Created at UTC timestamp
-          example: '2021-04-21T03:04:24.957Z'
-        updated_at:
-          type: string
-          format: date-time
-          description: Last updated UTC timestamp
-          example: '2021-04-22T03:04:24.957Z'
-        job_number:
-          type: string
-          description: Job number
-          example: OE0001
-        provider:
-          type: object
-          properties:
-            id:
-              type: string
-              description: Provider ID
-              format: uuid
-              example: 9z09d439-24b0-4a87-8019-dd9c60a69f82
-            name:
-              type: string
-              description: Provider name
-              example: A Clarke & Co (Smethwick) Ltd
-        job_documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/JobDocument'
-        invoice_info:
-          type: object
-          $ref: '#/components/schemas/InvoiceInfo'
-    LineItems:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Charge description
-          example: HANDLING FEES
-        quantity:
-          type: integer
-          description: Quantity
-          example: 1
-        unit_price:
-          type: number
-          description: Unit price
-          example: 100000
-        currency:
-          type: string
-          description: Currency
-          example: THB
-        total:
-          type: integer
-          description: Total
-          example: 100000
-    MatchingLineItems:
-      type: object
-      properties:
-        charge_type:
-          type: string
-          description: Charge description
-          example: HANDLING FEES
-        document:
-          type: string
-          example: Invoice
-          description: Document reference
-        exchange_rate:
-          type: integer
-          example: '1'
-          description: Exchange rate
-        id:
-          type: string
-          format: uuid
-          description: Job document version id
-          example: 7a4540bc-10eb-48c4-a3a0-02e738afa95a
-        invoice_amount:
-          type: number
-          description: Amount in invoice document
-          example: 40391
-        invoice_before_tax:
-          type: number
-          description: Amount before tax
-          example: 0
-        invoice_currency:
-          type: string
-          description: Currency
-          example: USD
-        invoice_price:
-          type: number
-          description: Price in invoice document
-          example: '197'
-        invoice_quantity:
-          type: number
-          description: Quanity in invoice document
-          example: 30
-        invoice_tax:
-          type: number
-          description: Quanity in invoice document
-          example: 30
-        invoice_unit:
-          type: string
-          description: Unit in invoice document
-          enum:
-          - BOL
-          - CNT
-          example: BOL
-        matched_amount:
-          type: number
-          description: Amount in baseline document
-          example: 40391
-        matched_currency:
-          type: string
-          description: Currency in baseline document
-          example: USD
-        matched_price:
-          type: number
-          description: Price in baseline document
-          example: '197'
-        matched_quantity:
-          type: number
-          description: Quanity in baseline document
-          example: 30
-        matched_unit:
-          type: string
-          description: Unit in baseline document
-          enum:
-          - BOL
-          - CNT
-          example: BOL
   securitySchemes:
     jwt:
       in: header
